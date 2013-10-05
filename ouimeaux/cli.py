@@ -32,7 +32,7 @@ def wemo():
     stateparser = subparsers.add_parser("switch",
                                         help="Turn a WeMo Switch on or off")
     stateparser.add_argument("device", help="Name or alias of the device")
-    stateparser.add_argument("state", help="'on' or 'off")
+    stateparser.add_argument("state", help="'on', 'off', 'toggle' or 'status'")
 
     subparsers.add_parser("list",
                           help="List all devices found in the environment")
@@ -62,6 +62,8 @@ def wemo():
             state = "off"
         elif args.state.lower() == "toggle":
             state = "toggle"
+        elif args.state.lower() == "status":
+            state = "status"
     else:
         ls = True
 
@@ -71,6 +73,9 @@ def wemo():
                 if state == "toggle":
                     found_state = switch.get_state(force_update=True)
                     switch.set_state(not found_state)
+                elif state == "status":
+                    found_state = switch.get_state(force_update=True)
+                    print found_state
                 else:
                     getattr(switch, state)()
                 sys.exit(0)
